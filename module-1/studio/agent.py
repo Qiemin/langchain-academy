@@ -6,7 +6,6 @@ from langgraph.prebuilt import tools_condition, ToolNode
 
 def add(a: int, b: int) -> int:
     """Adds a and b.
-
     Args:
         a: first int
         b: second int
