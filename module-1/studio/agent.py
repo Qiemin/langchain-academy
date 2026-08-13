@@ -34,7 +34,9 @@ def divide(a: int, b: int) -> float:
 tools = [add, multiply, divide]
 
 # Define LLM with bound tools
-llm = ChatOpenAI(model="gpt-4o")
+llm = ChatOpenAI(model="qwen-plus",
+                openai_api_base="https://dashscope.aliyuncs.com/compatible-mode/v1"
+                 )
 llm_with_tools = llm.bind_tools(tools)
 
 # System message
@@ -59,3 +61,17 @@ builder.add_edge("tools", "assistant")
 
 # Compile graph
 graph = builder.compile()
+
+if __name__ == "__main__":
+    input_msg = {"messages": [("user", "请计算 (3 + 5) * 2 的结果")]}
+
+    for event in graph.stream(input_msg, stream_mode="updates"):
+        for node_name, node_output in event.items():
+            print(f"\n--- [{node_name}] ---")
+            if "messages" in node_output:
+                for msg in node_output["messages"]:
+                    # 区分普通回复和工具调用
+                    if hasattr(msg, "tool_calls") and msg.tool_calls:
+                        print(f"🔧 Tool Call: {msg.tool_calls}")
+                    else:
+                        print(f"💬 {msg.content}")
