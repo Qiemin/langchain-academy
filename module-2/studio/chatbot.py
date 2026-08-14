@@ -5,7 +5,7 @@ from langgraph.graph import StateGraph, START, END
 
 # We will use this model for both the conversation and the summarization
 from langchain_openai import ChatOpenAI
-model = ChatOpenAI(model="gpt-4o", temperature=0) 
+model = ChatOpenAI(model="qwen-plus", base_url="https://dashscope.aliyuncs.com/compatible-mode/v1", temperature=0) 
 
 # State class to store messages and summary
 class State(MessagesState):
